@@ -129,7 +129,7 @@ The CBC's full raw dataset underlying the above news articles has been provided 
 ***The raw dataset is not available on this GitHub site.***
 
 CBC's Journalistic Standards and Practises can be found here.  Expand the `Data Journalism` dropdown for pertinent information.
-    * https://cbc.radio-canada.ca/en/vision/governance/journalistic-standards-and-practices/sources
+* https://cbc.radio-canada.ca/en/vision/governance/journalistic-standards-and-practices/sources
 
 My thanks to Robson Fletcher of the CBC for sharing this dataset for my project and analysis.
 
