@@ -23,7 +23,7 @@ See file [`erwait_eda_hypothesis_testing.ipynb`](src/erwait_eda_hypothesis_testi
 
 ### Classifier Model Built
 
-This project built several Logstic Regression classification models aimed at predicting the outcome of "experiencing a long wait at the ER", with input parameters involving features from the dataset such as:
+This project built several Logistic Regression classification models aimed at predicting the outcome of "experiencing a long wait at the ER", with input parameters involving features from the dataset such as:
 * hospital
 * city
 * city type (urban or rural)
@@ -33,7 +33,7 @@ This project built several Logstic Regression classification models aimed at pre
 
 See files [`erwait_model_logit.ipynb`](src/erwait_model_logit.ipynb), [`erwait_model_randomforestclassifier.ipynb`](src/erwait_model_randomforestclassifier.ipynb) and [`erwait_model_xgboost.ipynb`](src/erwait_model_xgboost.ipynb).
 
-The very best classifier was an XGBoostClassifier built with GridSearchCV, using a SMOTE and RandomUnderSampler approach to deal with class imbalance, and with the 'hour' and 'weekofyear' X variables `Label Encoded` and the remainder of the categorical features one-hot encoded.
+The very best classifier was an XGBoostClassifier built with GridSearchCV, using a SMOTE and RandomUnderSampler approach to deal with class imbalance, and with the `hour` and `weekofyear` X variables `Label Encoded` and the remainder of the categorical features one-hot encoded.
 
 The evaluation of all models is in [`erwait_evaluation_all_models.ipynb`](src/erwait_evaluation_all_models.ipynb).
 
@@ -52,7 +52,14 @@ The evaluation of all models is in [`erwait_evaluation_all_models.ipynb`](src/er
 - The histograms drawn in EDA show that there are many differences in median wait time across hospitals, and presence of right skew (long wait times) in some hospitals.
 - Plots and statistical tests showed significant differences in mean wait time between day of week for certain hospitals, including the apparent fact that for the hospitals that tend to have the least likelihood of long wait times, the weekends (Sat, Sun) mean wait times are significantly lower than weekday.
 - The 'night' dayperiod (00h00 to 07h59, inclusive) in the EDA plots tends to have a statistically lower mean wait time. The best classifier model's feature importances also demonstrated that the 'night' period also played a significant role in gain/purity of the splits of the tree.
-- From `predict_proba()` calculations on the test data, in a notebook that were not included in this repository, the % incidence of preidctions with a >80% probability of long wait time was fairly high in certain hospitals: specifically, Peter Lougheed Centre in Calgary, and the Red Deer Regional Hospital. It would be interesting to run a more formal set of predictions on generic input data and calculate % incidences on all hospitals. It would be interesting to dig into why these two (and potentially other) hospitals have such a high % incidence of ">80% probability of a long wait" as well.
+- From `predict_proba()` calculations on the test data, in a notebook that were not included in this repository, the % incidence of predictions with a >80% probability of long wait time was mostly 0% for most hospitals, but above zero in certain hospitals: specifically:
+    - Peter Lougheed Centre in Calgary (11.68% incidence across 1910 test data rows)
+    - Misericordia Community Hospital (7.79% across 1887 test data rows)
+    - South Health Campus (3.39% across 1831 test data rows)
+    - Red Deer Regional Hospital (1.9% across 1794 test data rows)
+    
+        - It would be interesting to run a more formal set of predictions on generic input data covering every hour, for all days, for all weeks in a generic year rather than simply relying on the test data. The idea would be to calculate the % incidences of predictions of >80% probability of having a 'long wait' on all hospitals.
+        - It would also be interesting to dig into why these two (and potentially other) hospitals have such a high % incidence of ">80% probability of a long wait" as well.
 
 ### Technical Discoveries
 - Model performance differences are quite impacted by the way the input data is prepared/treated before being fed the model, specifically:
@@ -108,6 +115,13 @@ Conservatively, I chose an arbitrary but informed threshold of 400 minutes (6h40
 ## Future Exploration 
 - It would be useful to re-train an XGB model with a much simplified dataset, removing collinear items, since the feature importances highlighted several collinear features repeatedly affected gain scores (example: city_Medicine Hat and `id_mhrh` (i.e. Medicine Hat Regional Hospital) both made it into the Top 10.
     - The next model would include simply hospital, hour, and week of year and would not include not city, or citytype (rural/urban) or day period measures.
+- Retrain the model after moving the threshold for "long wait" to be closer to the mean or median across all hospitals in the dataset, and change the target variable to "longer than mean wait time".
+
+    This would solve for class imbalance, and is perhaps a more interesting prediction since most people are not asking "Is my wait going to be longer than 6h40m" when they attend the ER, but rather something like, "Will I have an above average wait time?" or "Will I have a longer than 3 hour wait time?".
+- Generate a generic input data set which includes a row for every hour, on every day, in every week, of a generic year, for every hospital.
+    - Feed this generic data set into the revised model, and obtain the `predict_proba()` on the entire dataset.  Merge the probability of Class 0 and probability of Class 1 into the dataset, then do EDA and plotting on this dataset, calculating the "% incidence of a > 80% (or whatever threshold we wish) probability of having an above-average wait time, per month".
+
+    This could be examined across hospitals, across cities, across urban vs. rural divides, and so on.
 - Given that the treatment of the data prior to feeding to various models significantly impacted the model performance, it would be good to more deeply investigate how to properly deal with featuers like `hour` and `weekofyear` properly: one-hot encoding (leading to a blow-up of dimensionality) vs. label encoding (which in some ways functions like ordinal encoding in a variable that has no ordinal ordering).
 - Obtain more raw data that includes July.
     - The present dataset was missing data from Weeks 28, 29, and 30 which correspond to Stampede time in Calgary, which may have shown higher wait times.
