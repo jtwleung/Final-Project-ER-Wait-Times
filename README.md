@@ -45,7 +45,7 @@ The evaluation of all models is in [`erwait_evaluation_all_models.ipynb`](src/er
 - The best classifier model predicted feature importances indicate more or less these are important factors:
     * specific hospital
     * rural vs. urban location
-    * day period
+    * day period (night, specifically: 00h00 to 07h59, inclusive)
 
 <img src='output/figures/gain_feat_imp_xgb_gridbest2.png' width="600"></img>
 
@@ -124,14 +124,12 @@ The ER Wait Times dataset for this project is owned by the Canadian Broadcasting
     * <a href="https://www.cbc.ca/news/canada/calgary/calgary-er-wait-time-tracker-cbc-1.6701714">CBC News Online: How are wait times at your local hospital?  Track Calgary and area emergency rooms here</a>
     * <a href="https://www.cbc.ca/news/canada/edmonton/edmonton-er-wait-time-tracker-cbc-1.6708480">CBC News Online: How are wait times at your local hospital?  Track Edmonton and area emergency rooms here</a>
 
-The CBC's full raw dataset underlying the above news articles has been provided to me courtesy of the CBC for the purposes of this data science program project.
+The CBC's full raw dataset underlying the plots show in the news articles linked above has been provided to me courtesy of the CBC for the purposes of this data science program project. My thanks to Robson Fletcher for sharing the dataset.
 
 ***The raw dataset is not available on this GitHub site.***
 
 CBC's Journalistic Standards and Practises can be found here.  Expand the `Data Journalism` dropdown for pertinent information.
 * https://cbc.radio-canada.ca/en/vision/governance/journalistic-standards-and-practices/sources
-
-My thanks to Robson Fletcher of the CBC for sharing this dataset for my project and analysis.
 
 ## How Alberta Health Calculates the Wait Times Displayed on their Website
 
