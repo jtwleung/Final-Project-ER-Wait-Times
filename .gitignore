@@ -169,3 +169,6 @@ data/cleandata/df_melted_er_wait_time_nov_22_2023.csv
 # The following files are my own files (simply containing Hospital Information - Name, ID, Address, City, Lat, Long, Services, CityType, etc.) that are OK to commit and make public
 #data/Alberta Hospital Info Nov32023.csv
 #data/cleandata/hospital_info_clean.csv
+
+# Powerpoint presentation with photo in is
+./Alberta ER Wait Times Analysis and Modeling Presentation-Local Copy w Photo.pptx
