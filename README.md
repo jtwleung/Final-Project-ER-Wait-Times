@@ -1,6 +1,6 @@
-# Final-Project-ER-Wait-Times
+# Alberta ER Wait Times Analysis & Predictive Modeling: Final Project
 
-This is a final project for Lighthouse Labs data science program wherein I complete data analysis and machine learning model building to explore Alberta ER Wait Times (instantaneous times captured from https://www.albertahealthservices.ca/waittimes/waittimes.aspx).
+This is a final project for Lighthouse Labs data science program wherein I complete data analysis and machine learning model building to explore Alberta ER Wait Times (instantaneous times captured from https://www.albertahealthservices.ca/waittimes/waittimes.aspx) between September 24, 2022 and November 22, 2023.
 
 Please see the [About the Data](#about-the-dataset) section to read about the provenance of the dataset used in this project.
 
@@ -21,6 +21,10 @@ Descriptive statistics were generated. Exploratory plots describing the data wer
 
 See file [`erwait_eda_hypothesis_testing.ipynb`](src/erwait_eda_hypothesis_testing.ipynb).
 
+One interesting overall summary plot from the aforementioned notebook is the distribution of wait times (in minutes) for each Alberta hospital with an Emergency Department:
+
+<img src='output/figures/wait_times_distribution_all_hospitals.png' width="700"></img>
+
 ### Classifier Model Built
 
 This project built several Logistic Regression classification models aimed at predicting the outcome of "experiencing a long wait at the ER", with input parameters involving features from the dataset such as:
@@ -31,9 +35,20 @@ This project built several Logistic Regression classification models aimed at pr
 * week of year of visit
 * day period of visit (day, evening, or night)
 
+The model types explored were: `LogisticRegression`, `RandomForestClassifier`, `XGBoostClassifier`.
+
 See files [`erwait_model_logit.ipynb`](src/erwait_model_logit.ipynb), [`erwait_model_randomforestclassifier.ipynb`](src/erwait_model_randomforestclassifier.ipynb) and [`erwait_model_xgboost.ipynb`](src/erwait_model_xgboost.ipynb).
 
 The very best classifier was an XGBoostClassifier built with GridSearchCV, using a SMOTE and RandomUnderSampler approach to deal with class imbalance, and with the `hour` and `weekofyear` X variables `Label Encoded` and the remainder of the categorical features one-hot encoded.
+
+### Project Approach
+
+The project followed this general approach:
+
+<img src='output/figures/Model_Buliding_Process_Flow.png' width="500"></img>
+
+
+### Model Evaluation
 
 The evaluation of all models is in [`erwait_evaluation_all_models.ipynb`](src/erwait_evaluation_all_models.ipynb).
 
@@ -58,8 +73,8 @@ The evaluation of all models is in [`erwait_evaluation_all_models.ipynb`](src/er
     - South Health Campus (3.39% across 1831 test data rows)
     - Red Deer Regional Hospital (1.9% across 1794 test data rows)
     
-        - It would be interesting to run a more formal set of predictions on generic input data covering every hour, for all days, for all weeks in a generic year rather than simply relying on the test data. The idea would be to calculate the % incidences of predictions of >80% probability of having a 'long wait' on all hospitals.
-        - It would also be interesting to dig into why these two (and potentially other) hospitals have such a high % incidence of ">80% probability of a long wait" as well.
+        - It would be interesting to run a more formal set of predictions on generic input data covering every hour, for all days, for all weeks in a generic year rather than simply relying on the test data (see [Future Exploration](#future-exploration) section below. The idea would be to calculate the % incidences of predictions of >80% probability of having a 'long wait' on all hospitals.
+        - It would also be interesting to dig into why the two hospitals with the highest "incidence of > 80% probability of having a long wait" (on test data only at this point) have such high values especially.
 
 ### Technical Discoveries
 - Model performance differences are quite impacted by the way the input data is prepared/treated before being fed the model, specifically:
@@ -70,7 +85,9 @@ The evaluation of all models is in [`erwait_evaluation_all_models.ipynb`](src/er
     - Moving from a GridSearched Logistic Regression model to even a simple RFC model using only default instantiation parameters gave a surprising boost to performance with relatively no investment. Similarly, moving from an RFC to a basic XGB classifier with default parameters gave a performance boost with little extra investment.
 - RFC grid search is computationally (and memory) expensive. Of the 4 attempts at GridSearchCV runs, each with reduced `param_grid` options, none finished, even though 2 of those runs were attempted on a GPU from Google Colab.
 
-## How was "Long Wait" determined?
+## How was the "Long Wait" Threshold determined?
+I chose 400 minutes as the threshold for calculating the target variable, "long wait".
+
 I consulted 4 sources to determine the guidelines for wait time, as follows:
 
 1. <a href="https://ctas-phctas.ca/wp-content/uploads/2018/05/ctased16_98.pdf">Implementation Guidelines for The Canadian Emergency Department Triage & Acuity Scale (CTAS)</a>, December 1998
@@ -145,7 +162,7 @@ The CBC's full raw dataset underlying the plots show in the news articles linked
 CBC's Journalistic Standards and Practises can be found here.  Expand the `Data Journalism` dropdown for pertinent information.
 * https://cbc.radio-canada.ca/en/vision/governance/journalistic-standards-and-practices/sources
 
-## How Alberta Health Calculates the Wait Times Displayed on their Website
+## Brief Note about How Alberta Health Calculates the Wait Times Displayed on their Website
 
 The below is a screen capture from the <a href="https://www.albertahealthservices.ca/waittimes/Page14230.aspx">Alberta Health Services Estimated Emergency Department Wait Times</a> website and shows that what is more or less being calculated is the patient to physician ratio, with an assumption that a physician can see a patient every 30 minutes:
 
