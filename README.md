@@ -34,6 +34,9 @@ This project built several Logistic Regression classification models aimed at pr
 * hour of day of visit
 * week of year of visit
 * day period of visit (day, evening, or night)
+    * 'night'   :  00h00 to 07h59, inclusive
+    - 'day'     :  08h00 to 15h59, inclusive
+    - 'evening' :  16h00 to 23h59, inclusive
 
 The model types explored were: `LogisticRegression`, `RandomForestClassifier`, `XGBoostClassifier`.
 
