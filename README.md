@@ -58,7 +58,7 @@ The evaluation of all models is in [`erwait_evaluation_all_models.ipynb`](src/er
 ## Project Outcomes
 - Basic descriptive statistics and exploratory data analysis on the raw data indicate, similar to the McMaster University data <sup>4</sup> referenced in the [How was 'Long Wait' determined section below](#how-was-long-wait-determined), that the CAEP <sup>1</sup> and CTAS <sup>2</sup> recommendations are being far exceeded in our Alberta ERs.
     - My choice of the "long wait" threshold of 400 minutes **far exceeds** the CAEP guideline of 3 hours at 90th percentile <sup>2</sup>.
-    - A "true outlier" (`Q3 + 1.5 * IQR`) is 502.5 minutes, which means that our Alberta wait times across the province are very high.
+    - A "true outlier" (`Q3 + 1.5 * IQR`) is 502.5 minutes, which means that our Alberta wait times across the province are generally quite high.
     - Mean wait times across hospitals are exceeding the CAEP <sup>2</sup> guideline.
 - The best classifier model predicted feature importances indicate more or less these are important factors:
     * specific hospital
@@ -161,7 +161,7 @@ The ER Wait Times dataset for this project is property of the Canadian Broadcast
     * <a href="https://www.cbc.ca/news/canada/calgary/calgary-er-wait-time-tracker-cbc-1.6701714">CBC News Online: How are wait times at your local hospital?  Track Calgary and area emergency rooms here</a>
     * <a href="https://www.cbc.ca/news/canada/edmonton/edmonton-er-wait-time-tracker-cbc-1.6708480">CBC News Online: How are wait times at your local hospital?  Track Edmonton and area emergency rooms here</a>
 
-The CBC's full raw dataset underlying the plots show in the news articles linked above has been provided to me courtesy of the CBC for the purposes of this data science program project. My thanks to Robson Fletcher for sharing the dataset.
+The CBC's full raw dataset underlying the plots shown in their news articles linked above has been provided to me courtesy of the CBC for the purposes of this data science program project. My thanks to Robson Fletcher for sharing the dataset.
 
 ***The raw dataset is not available on this GitHub site.***
 
