@@ -70,14 +70,14 @@ The evaluation of all models is in [`erwait_evaluation_all_models.ipynb`](src/er
 - The histograms drawn in EDA show that there are many differences in median wait time across hospitals, and presence of right skew (long wait times) in some hospitals.
 - Plots and statistical tests showed significant differences in mean wait time between day of week for certain hospitals, including the apparent fact that for the hospitals that tend to have the least likelihood of long wait times, the weekends (Sat, Sun) mean wait times are significantly lower than weekday.
 - The 'night' dayperiod (00h00 to 07h59, inclusive) in the EDA plots tends to have a statistically lower mean wait time. The best classifier model's feature importances also demonstrated that the 'night' period also played a significant role in gain/purity of the splits of the tree.
-- From `predict_proba()` calculations on the test data, in a notebook that were not included in this repository, the % incidence of predictions with a >80% probability of long wait time was mostly 0% for most hospitals, but above zero in certain hospitals: specifically:
-    - Peter Lougheed Centre in Calgary (11.68% incidence across 1910 test data rows)
-    - Misericordia Community Hospital (7.79% across 1887 test data rows)
-    - South Health Campus (3.39% across 1831 test data rows)
-    - Red Deer Regional Hospital (1.9% across 1794 test data rows)
+- From `predict_proba()` calculations on generic data representing "every hour, for every day, for every week of the year" (8736 rows), in a notebook that was not included in this repository, the % incidence of predictions with a >90% probability of long wait time was low or under 10% for most hospitals, but reasonably high in certain hospitals, specifically:
+    - Peter Lougheed Centre in Calgary (22% incidence, 1952 occurrences over 8736 rows)
+    - South Health Campus (18% incidence, 1535 occurrences over 8736 rows)
+    - Red Deer Regional Hospital (13% incidence, 1171 occurrences over 8736 rows)
+    - Misericordia Community Hospital (12% incidence, 1032 occurrences over 8736 rows)
     
-        - It would be interesting to run a more formal set of predictions on generic input data covering every hour, for all days, for all weeks in a generic year rather than simply relying on the test data (see [Future Exploration](#future-exploration) section below. The idea would be to calculate the % incidences of predictions of >80% probability of having a 'long wait' on all hospitals.
-        - It would also be interesting to dig into why the two hospitals with the highest "incidence of > 80% probability of having a long wait" (on test data only at this point) have such high values especially.
+        - It would be interesting to re-run this after re-building a new, more reliable model (perhaps with the classification problem defined as "is the wait more than 3 hours, the recommended wait (at 90th percentile) by the CAEP?", or "is the wait longer than average for the entire dataset?"), and predicting on the  generic input data covering every hour, for all days, for all weeks in a generic year (see [Future Exploration](#future-exploration) section below.
+        - It would also be interesting to dig into why these 4 hospitals with the highest "incidence of > 90% probability of having a long wait" have such high values compared to other hospitals, especially.
 
 ### Technical Discoveries
 - Model performance differences are quite impacted by the way the input data is prepared/treated before being fed the model, specifically:
@@ -142,6 +142,9 @@ Conservatively, I chose an arbitrary but informed threshold of 400 minutes (6h40
     - Feed this generic data set into the revised model, and obtain the `predict_proba()` on the entire dataset.  Merge the probability of Class 0 and probability of Class 1 into the dataset, then do EDA and plotting on this dataset, calculating the "% incidence of a > 80% (or whatever threshold we wish) probability of having an above-average wait time, per month".
 
     This could be examined across hospitals, across cities, across urban vs. rural divides, and so on.
+
+    Though this has been done preliminarily in a notebook not included in this GitHub, a more formalized approach with accompanying plots, would yield intriguing results.
+
 - Given that the treatment of the data prior to feeding to various models significantly impacted the model performance, it would be good to more deeply investigate how to properly deal with featuers like `hour` and `weekofyear` properly: one-hot encoding (leading to a blow-up of dimensionality) vs. label encoding (which in some ways functions like ordinal encoding in a variable that has no ordinal ordering).
 - Obtain more raw data that includes July.
     - The present dataset was missing data from Weeks 28, 29, and 30 which correspond to Stampede time in Calgary, which may have shown higher wait times.
@@ -153,7 +156,7 @@ Conservatively, I chose an arbitrary but informed threshold of 400 minutes (6h40
 
 ## About the Dataset
 
-The ER Wait Times dataset for this project is owned by the Canadian Broadcasting Corporation (CBC).
+The ER Wait Times dataset for this project is property of the Canadian Broadcasting Corporation (CBC).
 * Primary source is Alberta Health Services, from their <a href="https://www.albertahealthservices.ca/waittimes/Page14230.aspx">Estimated Emergency Department Wait Times</a> website, which the CBC has aggregated and visualized in these news articles:
     * <a href="https://www.cbc.ca/news/canada/calgary/calgary-er-wait-time-tracker-cbc-1.6701714">CBC News Online: How are wait times at your local hospital?  Track Calgary and area emergency rooms here</a>
     * <a href="https://www.cbc.ca/news/canada/edmonton/edmonton-er-wait-time-tracker-cbc-1.6708480">CBC News Online: How are wait times at your local hospital?  Track Edmonton and area emergency rooms here</a>
