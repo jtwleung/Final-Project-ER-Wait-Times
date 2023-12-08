@@ -82,7 +82,7 @@ The evaluation of all models is in [`erwait_evaluation_all_models.ipynb`](src/er
     - Red Deer Regional Hospital (13% incidence, 1171 occurrences over 8736 rows)
     - Misericordia Community Hospital (12% incidence, 1032 occurrences over 8736 rows)
     
-        - It would be interesting to re-run this after re-building a new, more reliable model (perhaps with the classification problem defined as "is the wait more than 3 hours, the recommended wait (at 90th percentile) by the CAEP?", or "is the wait longer than average for the entire dataset?"), and predicting on the  generic input data covering every hour, for all days, for all weeks in a generic year (see [Future Exploration](#future-exploration) section below.
+        - It would be interesting to re-run this after re-building a new, more reliable model (perhaps with the classification problem defined as "is the wait more than 3 hours, the recommended wait (at 90th percentile) by the CAEP?", or "is the wait longer than average for the entire dataset?"), and predicting on the  generic input data covering every hour, for all days, for all weeks in a generic year (see [Future Exploration](#future-exploration) section below).
         - It would also be interesting to dig into why these 4 hospitals with the highest "incidence of > 90% probability of having a long wait" have such high values compared to other hospitals, especially.
 
 ### Technical Discoveries
@@ -148,13 +148,13 @@ The following are some ideas for future enhancement and exploration:
 
 It would be useful to re-train an XGB model with a much simplified dataset, removing collinear items, since the feature importance scores highlighted several collinear features repeatedly affected gain scores (example: `city_Medicine Hat` and `id_mhrh` (i.e. Medicine Hat Regional Hospital) both made it into the Top 10.
 
-    The next model would include simply include hospital, hour, and week of year and would not include city, citytype (rural/urban) or day period measures, since those are derivable from the core features. This may simply and improve clarity of feature importance scores.
+> The next model would include simply include hospital, hour, and week of year and would not include city, citytype (rural/urban) or day period measures, since those are derivable from the core features. This may simply and improve clarity of feature importance scores.
 
 ### 2. Change Threshold for Classification Problem & Retrain Model
 
 Retrain the model after moving the threshold for "long wait" to be closer to the mean or median across all hospitals in the dataset, and change the target variable to "longer than mean wait time" or "longer than national guideline wait time".
 
-    This would solve for class imbalance, and thereby should improve Precision (improve F1 score) and is perhaps a more interesting prediction since most people are not asking "Is my wait going to be longer than 6h40m (close to 7 hours)?" when they attend the ER, but rather something closer to, "Will I have an above averag- wait time?" or "Will I have a longer than recommended-by-national-guidelines wait time?".
+> This would solve for class imbalance, and thereby should improve Precision (improve F1 score) and is perhaps a more interesting prediction since most people are not asking "Is my wait going to be longer than 6h40m (close to 7 hours)?" when they attend the ER, but rather something closer to, "Will I have an above averag- wait time?" or "Will I have a longer than recommended-by-national-guidelines wait time?".
 
 ### 3. Use the Model to Look at Incidence of "Long Wait" or "Above Average Wait" or "Above Guideline Wait"
 
@@ -162,15 +162,15 @@ Generate a generic input data set which includes a row for every hour, on every 
 
 Feed this generic data set into a revised and more "accurate" (high F1 score) model, and obtain the `predict_proba()` on the entire dataset.  Merge the columns "Probability of Class 0" and "Probability of Class 1" into the original generic dataset, then perform EDA and plotting on this dataset, calculating the "% incidence of a > 80% (or whatever threshold we wish) probability of having a long, or above-average, or above-guideline wait time" per hospital, per city, per week or year, per day of week, or other ways of "slicing" the data.
 
-    This analysis could be examined across hospitals, across cities, across urban vs. rural divides, and so on.
+>This analysis could be examined across hospitals, across cities, across urban vs. rural divides, and so on.
 
-    Though this has been done preliminarily in a notebook not included in this GitHub, a more formalized approach with accompanying plots, might yield intriguing and "generalized" (predictive) results.
+> Though this has been done preliminarily in a notebook not included in this GitHub, a more formalized approach with accompanying plots, might yield intriguing and "generalized" (predictive) results.
 
 ### 4. More Deeply Investigate "Proper" and "Recommended" Pre-Processing and Encoding of Input Data for XGBoost Models
 
 Given that the treatment of the data prior to feeding to various model classes significantly impacted the model performance, it would be good to more deeply investigate how to properly deal with featuers like `hour` and `weekofyear` properly: one-hot encoding (leading to a blow-up of dimensionality) vs. label encoding (which in some ways functions like ordinal encoding in a variable that has no ordinal ordering). During this project, my investigation yielded various and sometimes divided opinions from practitioners.
 
-    It would be nice to have a longer time to more thoroughly understand the theoretical guidelines and what works best with the model, specifically an XGBoost model.
+> It would be nice to have a longer time to more thoroughly understand the theoretical guidelines and what works best with the model, specifically an XGBoost model.
 
 ### 5. Obtain more raw data that includes July.
 
